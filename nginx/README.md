@@ -1,12 +1,13 @@
 # Nginx Proxy Setup for Jenkins
 
-This directory contains the nginx configuration to proxy requests from `jenkins.pna.xyz` to your Jenkins instance.
+This directory contains the nginx configuration to proxy requests from `jenkins.phatngocanh.xyz` to your Jenkins instance.
 
 ## Setup Instructions
 
-1. **Create the external network** (if it doesn't exist):
+1. **Start Jenkins** (if not already running):
    ```bash
-   docker network create nginx-network
+   cd pna-infra/jenkins
+   docker-compose up -d
    ```
 
 2. **Start the nginx proxy**:
@@ -17,12 +18,12 @@ This directory contains the nginx configuration to proxy requests from `jenkins.
 
 3. **Verify the setup**:
    - Check if nginx is running: `docker ps`
-   - Test the health endpoint: `curl http://jenkins.pna.xyz/health`
-   - Access Jenkins: `http://jenkins.pna.xyz`
+   - Test the health endpoint: `curl http://jenkins.phatngocanh.xyz/health`
+   - Access Jenkins: `http://jenkins.phatngocanh.xyz`
 
 ## Configuration Details
 
-- **Domain**: jenkins.pna.xyz
+- **Domain**: jenkins.phatngocanh.xyz
 - **Proxy Target**: Jenkins running on port 8080
 - **Ports**: 80 (HTTP), 443 (HTTPS - ready for SSL)
 - **WebSocket Support**: Enabled for Jenkins real-time features
@@ -38,5 +39,5 @@ To enable HTTPS, you can:
 ## Troubleshooting
 
 - Check nginx logs: `docker logs nginx-proxy`
-- Verify network connectivity: `docker network inspect nginx-network`
-- Test proxy connectivity: `curl -H "Host: jenkins.pna.xyz" http://localhost` 
+- Test proxy connectivity: `curl -H "Host: jenkins.phatngocanh.xyz" http://localhost`
+- Verify Jenkins is accessible: `curl http://localhost:8080` 
