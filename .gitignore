@@ -1,0 +1,20 @@
+# SSL Certificates
+nginx/ssl/
+*.pem
+*.key
+*.crt
+*.csr
+
+# Jenkins data
+jenkins/jenkins_home/
+
+# Logs
+*.log
+
+# Environment files
+.env
+.env.local
+
+# OS files
+.DS_Store
+Thumbs.db 
