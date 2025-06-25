@@ -1,6 +1,6 @@
 # PNA Infrastructure
 
-Infrastructure configuration for PNA Organization with Jenkins CI/CD and Nginx reverse proxy with SSL support.
+This repository contains the infrastructure configuration for PNA services including nginx, MySQL, and Jenkins.
 
 ## 🚀 Quick Start
 
@@ -153,3 +153,96 @@ docker exec nginx-proxy nginx -t
 docker logs -f nginx-proxy
 docker logs -f jenkins
 ```
+
+## 🗄️ Database Connection
+
+### ⚠️ **IMPORTANT: Cloudflare Configuration Required**
+
+Your MySQL database is accessible through the domain name `database.phatngocanh.xyz` on port `3307`, but **you MUST configure Cloudflare correctly** for it to work.
+
+### 🔧 **Cloudflare DNS Configuration**
+
+**CRITICAL:** You must disable Cloudflare proxy for MySQL connections to work.
+
+1. **Go to Cloudflare Dashboard** → DNS settings for `phatngocanh.xyz`
+2. **Find the `database` A record**
+3. **Click the orange cloud icon** to turn it **GRAY** (DNS only, no proxy)
+4. **Save the changes**
+
+```
+✅ Correct: Gray cloud (DNS only)
+❌ Wrong: Orange cloud (Proxy enabled)
+```
+
+### 🌐 **Why This Matters**
+
+- **Orange Cloud (Proxy):** Only works for HTTP/HTTPS traffic (ports 80, 443)
+- **Gray Cloud (DNS only):** Works for ALL protocols including MySQL (port 3307)
+
+Cloudflare cannot proxy MySQL connections because:
+- MySQL uses its own binary protocol, not HTTP
+- Cloudflare is designed for web traffic only
+- MySQL connections are persistent, not request-response
+
+### 🔗 **Connection Details**
+
+**Host:** `database.phatngocanh.xyz`  
+**Port:** `3307`  
+**Protocol:** MySQL TCP
+
+### 📝 **How to Connect**
+
+**From your local machine:**
+```bash
+mysql -h database.phatngocanh.xyz -P 3307 -u root -p
+```
+
+**From applications:**
+```
+mysql://root:password@database.phatngocanh.xyz:3307
+```
+
+**Using MySQL Workbench:**
+- Host: `database.phatngocanh.xyz`
+- Port: `3307`
+- Username: `root`
+- Password: Your MySQL root password
+
+### 🌍 **Web Interface**
+
+- **Status page:** `https://database.phatngocanh.xyz`
+- **Health check:** `https://database.phatngocanh.xyz/health`
+
+### 🔒 **Security Notes**
+
+- The connection is proxied through nginx with SSL termination
+- Make sure your MySQL server is properly secured with strong passwords
+- Consider using specific database users instead of root for applications
+- The web interface (HTTPS) works through Cloudflare proxy, but MySQL connections require DNS-only mode
+
+### 🚨 **Troubleshooting**
+
+**If you get "Communications link failure":**
+1. Check that Cloudflare proxy is **DISABLED** (gray cloud)
+2. Wait 5-30 minutes for DNS propagation
+3. Verify the domain resolves to your server IP: `103.72.98.174`
+
+**If you get "Access denied":**
+- Check MySQL user permissions
+- Ensure the user can connect from the Docker network
+
+### 📁 **Configuration Files**
+
+- `nginx/nginx.conf` - Main nginx configuration with MySQL stream proxy
+- `nginx/conf.d/database.phatngocanh.xyz.conf` - HTTP/HTTPS server configuration
+- `mysql/docker-compose.yaml` - MySQL container configuration
+
+### 🐳 **Services**
+
+- **Nginx:** Reverse proxy and MySQL TCP proxy (ports 80, 443, 3307)
+- **MySQL:** Database server (port 3306 internally, 3307 externally)
+- **Jenkins:** CI/CD server (port 8080)
+
+---
+
+**Remember:** Always use **GRAY CLOUD** (DNS only) in Cloudflare for the database subdomain! 🎯

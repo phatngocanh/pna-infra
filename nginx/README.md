@@ -150,4 +150,49 @@ server {
         # ... other proxy settings
     }
 }
-``` 
+```
+
+# Nginx Configuration
+
+This directory contains the nginx configuration for the PNA infrastructure.
+
+## Database Connection
+
+Your MySQL database is now accessible through the domain name `database.phatngocanh.xyz` on port `3307`.
+
+### Connection Details:
+- **Host**: `database.phatngocanh.xyz`
+- **Port**: `3307`
+- **Protocol**: MySQL
+
+### How to Connect:
+
+1. **Using MySQL Command Line Client:**
+   ```bash
+   mysql -h database.phatngocanh.xyz -P 3307 -u root -p
+   ```
+
+2. **Using MySQL Workbench or other GUI clients:**
+   - Host: `database.phatngocanh.xyz`
+   - Port: `3307`
+   - Username: `root`
+   - Password: Your MySQL root password
+
+3. **Using connection string:**
+   ```
+   mysql://root:password@database.phatngocanh.xyz:3307
+   ```
+
+### Web Interface:
+- Visit `https://database.phatngocanh.xyz` for a status page
+- Health check: `https://database.phatngocanh.xyz/health`
+
+### Security Notes:
+- The connection is proxied through nginx with SSL termination
+- Make sure your MySQL server is properly secured with strong passwords
+- Consider using specific database users instead of root for applications
+
+## Configuration Files:
+- `nginx.conf` - Main nginx configuration
+- `conf.d/database.phatngocanh.xyz.conf` - HTTP/HTTPS server configuration
+- `stream.d/mysql.conf` - TCP stream configuration for MySQL proxying 
