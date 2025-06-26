@@ -2,9 +2,8 @@ version: '3.8'
 
 services:
   jenkins:
-    image: jenkins/jenkins:lts
+    build: .
     container_name: jenkins
-    user: root
     ports:
       - "8080:8080"
       - "50000:50000"
@@ -14,13 +13,6 @@ services:
     restart: unless-stopped
     environment:
       - DOCKER_HOST=unix:///var/run/docker.sock
-    command: >
-      sh -c "
-        apt-get update &&
-        apt-get install -y docker.io &&
-        usermod -aG docker jenkins &&
-        su jenkins -c '/usr/local/bin/jenkins.sh'
-      "
 
 volumes:
   jenkins_home:
