@@ -19,8 +19,7 @@ RUN apt-get update && \
     rm -rf /var/lib/apt/lists/*
 
 # Create docker group and add jenkins user
-ARG DOCKER_GID=999
-RUN groupadd -g $DOCKER_GID docker && \
+RUN groupadd -g 989 docker && \
     usermod -aG docker jenkins
 
 USER jenkins
