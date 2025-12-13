@@ -1,4 +1,5 @@
-jenkins/jenkins:lts-jdk17
+FROM jenkins/jenkins:lts-jdk17
+
 USER root
 
 # Install Docker CLI and MySQL client tools
