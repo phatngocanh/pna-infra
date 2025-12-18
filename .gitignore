@@ -1,5 +1,7 @@
-# SSL Certificates
+# SSL Certificates and Certbot
 nginx/ssl/
+nginx/certbot/conf/
+nginx/certbot/www/
 *.pem
 *.key
 *.crt
