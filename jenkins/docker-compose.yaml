@@ -4,6 +4,9 @@ services:
   jenkins:
     build: .
     container_name: jenkins
+    dns:
+      - 8.8.8.8
+      - 1.1.1.1
     ports:
       - "8080:8080"
       - "50000:50000"
