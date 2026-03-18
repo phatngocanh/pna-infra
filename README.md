@@ -98,10 +98,15 @@ docker-compose -f jenkins/docker-compose.yaml restart
 docker-compose -f nginx/docker-compose.yaml restart
 ```
 
-### Update SSL Certificates
+### Update SSL Certificates (Let's Encrypt)
+
+Certificates auto-renew via the certbot container. To renew manually or fix expired certs:
+
 ```bash
-# After updating certificates
-docker-compose -f nginx/docker-compose.yaml restart
+cd nginx
+./renew-certs.sh   # Manual renewal + nginx reload
+# Or for initial/expired setup:
+./init-ssl.sh      # Full certificate request
 ```
 
 ## 🌐 Adding New Subdomains

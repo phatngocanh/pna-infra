@@ -23,7 +23,49 @@ This directory contains the nginx configuration to proxy requests from `jenkins.
    - Test the health endpoint: `curl https://jenkins.phatngocanh.xyz/health`
    - Access Jenkins: `https://jenkins.phatngocanh.xyz`
 
-## SSL Setup with Cloudflare
+## SSL Setup with Let's Encrypt
+
+This setup uses Let's Encrypt certificates (90-day validity) with automatic renewal.
+
+### Initial Setup (first time or expired certs)
+
+```bash
+cd nginx
+./init-ssl.sh
+```
+
+This will request certificates for:
+- **phatngocanh.xyz**: donhang, bichngoc, demo, jenkins, quanly, etc.
+- **ezfi.click**: ezfi.click, www.ezfi.click, be.ezfi.click
+
+Then starts nginx + certbot.
+
+### Auto-Renewal
+
+Certificates auto-renew when the **certbot** container is running:
+
+- **Certbot** runs `certbot renew` every 12 hours
+- On successful renewal, nginx is automatically reloaded via deploy-hook
+- Let's Encrypt renews certs when they're within 30 days of expiry
+
+**Manual renewal** (e.g. for cron backup or on-demand):
+
+```bash
+cd nginx
+./renew-certs.sh
+```
+
+**Optional: Add cron for redundancy** (runs daily at 3 AM):
+
+```bash
+crontab -e
+# Add (replace with your actual path):
+0 3 * * * /path/to/pna-infra/nginx/renew-certs.sh >> /var/log/certbot-renew.log 2>&1
+```
+
+**Note:** The certbot container needs access to the Docker socket (`/var/run/docker.sock`) to reload nginx after renewal. This is configured in `docker-compose.yaml`.
+
+## SSL Setup with Cloudflare (Alternative)
 
 ### 1. Get Wildcard Certificate from Cloudflare
 

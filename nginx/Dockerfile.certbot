@@ -1,0 +1,3 @@
+# Extends certbot with docker CLI for deploy-hook (nginx reload after renewal)
+FROM certbot/certbot
+RUN apk add --no-cache docker
