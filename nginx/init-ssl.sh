@@ -11,7 +11,10 @@ PNA_DOMAINS=(
     "demo-backend.phatngocanh.xyz"
     "demo.phatngocanh.xyz"
     "donhang-be.phatngocanh.xyz"
+    "grafana.phatngocanh.xyz"
     "jenkins.phatngocanh.xyz"
+    "loki.phatngocanh.xyz"
+    "n8n.phatngocanh.xyz"
     "quanly-be.phatngocanh.xyz"
     "quanly.phatngocanh.xyz"
 )

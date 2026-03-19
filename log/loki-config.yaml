@@ -1,0 +1,65 @@
+auth_enabled: false
+
+server:
+  http_listen_port: 3100
+  grpc_listen_port: 9096
+  # Reduce gRPC message limits to save memory
+  grpc_server_max_recv_msg_size: 4194304   # 4MB
+  grpc_server_max_send_msg_size: 4194304   # 4MB
+
+common:
+  instance_addr: 127.0.0.1
+  path_prefix: /loki
+  storage:
+    filesystem:
+      chunks_directory: /loki/chunks
+      rules_directory: /loki/rules
+  replication_factor: 1
+  ring:
+    kvstore:
+      store: inmemory
+
+schema_config:
+  configs:
+    - from: 2020-10-24
+      store: boltdb-shipper
+      object_store: filesystem
+      schema: v11
+      index:
+        prefix: index_
+        period: 24h
+
+storage_config:
+  boltdb_shipper:
+    active_index_directory: /loki/boltdb-shipper-active
+    cache_location: /loki/boltdb-shipper-cache
+    cache_ttl: 24h
+    shared_store: filesystem
+  filesystem:
+    directory: /loki/chunks
+
+limits_config:
+  retention_period: 168h       # 7 days
+  ingestion_rate_mb: 4
+  ingestion_burst_size_mb: 8
+  max_cache_freshness_per_query: 10m
+  split_queries_by_interval: 30m
+
+chunk_store_config:
+  max_look_back_period: 168h   # Must match retention_period
+
+query_range:
+  # Reduce parallelism to limit memory under load
+  parallelise_shardable_queries: false
+
+ingester:
+  chunk_idle_period: 10m
+  chunk_target_size: 1048576   # 1MB
+  max_chunk_age: 2h
+  chunk_retain_period: 30s
+
+compactor:
+  working_directory: /loki/compactor
+  retention_enabled: true
+  retention_delete_delay: 2h
+  delete_request_store: filesystem

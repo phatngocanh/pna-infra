@@ -2,7 +2,8 @@ version: "3.8"
 
 services:
   n8n:
-    image: n8nio/n8n
+    build: .
+    image: n8n-custom
     container_name: n8n
     ports:
       - "${port}:${port}"
