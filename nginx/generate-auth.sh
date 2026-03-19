@@ -14,12 +14,11 @@ if [ ! -f "$ENV_FILE" ]; then
     exit 1
 fi
 
-# Source the env file
-set -a
-source "$ENV_FILE"
-set +a
+# Parse env file without sourcing (handles special characters safely)
+LOKI_USERNAME=$(grep -E '^LOKI_USERNAME=' "$ENV_FILE" | cut -d'=' -f2-)
+LOKI_PASSWORD=$(grep -E '^LOKI_PASSWORD=' "$ENV_FILE" | cut -d'=' -f2-)
 
-if [ -z "${LOKI_USERNAME:-}" ] || [ -z "${LOKI_PASSWORD:-}" ]; then
+if [ -z "$LOKI_USERNAME" ] || [ -z "$LOKI_PASSWORD" ]; then
     echo "ERROR: LOKI_USERNAME and LOKI_PASSWORD must be set in $ENV_FILE" >&2
     exit 1
 fi

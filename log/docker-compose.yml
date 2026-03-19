@@ -1,13 +1,14 @@
 services:
   loki:
     image: grafana/loki:2.9.0
-    ports:
-      - "3100:3100"
     command: -config.file=/etc/loki/local-config.yaml
     volumes:
       - ./loki-config.yaml:/etc/loki/local-config.yaml
       - loki_data:/loki
     restart: unless-stopped
+    networks:
+      - internal
+      - monitoring
     deploy:
       resources:
         limits:
@@ -17,15 +18,12 @@ services:
 
   grafana:
     image: grafana/grafana:10.2.0
-    ports:
-      - "9876:3000"
     env_file: .env
     environment:
       - GF_SECURITY_ADMIN_USER=${GF_SECURITY_ADMIN_USER}
       - GF_SECURITY_ADMIN_PASSWORD=${GF_SECURITY_ADMIN_PASSWORD}
       - GF_USERS_ALLOW_SIGN_UP=false
       - GF_SERVER_HTTP_PORT=3000
-      # Reduce memory footprint
       - GF_DATABASE_MAX_OPEN_CONN=5
       - GF_DATABASE_MAX_IDLE_CONN=2
       - GF_RENDERING_MAX_CONCURRENCY=1
@@ -37,12 +35,21 @@ services:
     depends_on:
       - loki
     restart: unless-stopped
+    networks:
+      - internal
+      - monitoring
     deploy:
       resources:
         limits:
           memory: 256m
         reservations:
           memory: 64m
+
+networks:
+  internal:
+    driver: bridge
+  monitoring:
+    external: true
 
 volumes:
   loki_data:
