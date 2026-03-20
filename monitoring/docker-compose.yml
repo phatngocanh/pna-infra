@@ -1,6 +1,7 @@
 services:
   loki:
     image: grafana/loki:2.9.0
+    container_name: loki
     command: -config.file=/etc/loki/local-config.yaml
     volumes:
       - ./loki-config.yaml:/etc/loki/local-config.yaml
@@ -18,6 +19,7 @@ services:
 
   grafana:
     image: grafana/grafana:10.2.0
+    container_name: grafana
     env_file: .env
     environment:
       - GF_SECURITY_ADMIN_USER=${GF_SECURITY_ADMIN_USER}
