@@ -23,7 +23,7 @@ schema_config:
   configs:
     - from: 2026-03-20
       store: tsdb
-      object_store: filesystem
+      object_store: s3
       schema: v13
       index:
         prefix: tsdb_
@@ -33,9 +33,13 @@ storage_config:
   tsdb_shipper:
     active_index_directory: /loki/tsdb-shipper-active
     cache_location: /loki/tsdb-shipper-cache
-    shared_store: filesystem
-  filesystem:
-    directory: /loki/chunks
+    shared_store: s3
+  aws:
+    region: ${LOKI_S3_REGION}
+    bucketnames: ${LOKI_S3_BUCKET}
+    access_key_id: ${LOKI_S3_ACCESS_KEY_ID}
+    secret_access_key: ${LOKI_S3_SECRET_ACCESS_KEY}
+    s3forcepathstyle: false
 
 limits_config:
   retention_period: 168h       # 7 days
@@ -59,4 +63,4 @@ compactor:
   working_directory: /loki/compactor
   retention_enabled: true
   retention_delete_delay: 2h
-  delete_request_store: filesystem
+  delete_request_store: s3
