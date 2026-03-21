@@ -3,17 +3,12 @@ auth_enabled: false
 server:
   http_listen_port: 3100
   grpc_listen_port: 9096
-  # Reduce gRPC message limits to save memory
   grpc_server_max_recv_msg_size: 4194304   # 4MB
   grpc_server_max_send_msg_size: 4194304   # 4MB
 
 common:
   instance_addr: 127.0.0.1
   path_prefix: /loki
-  storage:
-    filesystem:
-      chunks_directory: /loki/chunks
-      rules_directory: /loki/rules
   replication_factor: 1
   ring:
     kvstore:
@@ -33,7 +28,6 @@ storage_config:
   tsdb_shipper:
     active_index_directory: /loki/tsdb-shipper-active
     cache_location: /loki/tsdb-shipper-cache
-    shared_store: s3
   aws:
     region: ${LOKI_S3_REGION}
     bucketnames: ${LOKI_S3_BUCKET}
@@ -48,9 +42,7 @@ limits_config:
   max_cache_freshness_per_query: 10m
   split_queries_by_interval: 30m
 
-
 query_range:
-  # Reduce parallelism to limit memory under load
   parallelise_shardable_queries: false
 
 ingester:
